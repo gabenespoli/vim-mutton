@@ -1,14 +1,8 @@
 
-if !exists('g:MuttonWidth')
-  let g:MuttonWidth = &columns / 4
-endif
-
-"" Commands {{{1
 command! MuttonToggle call MuttonToggle()
 
-" SidebarEmptyToggle {{{2
 function! MuttonToggle()
-  if exists('g:MuttonEnabled') && g:MuttonEnabled = 1
+  if exists('g:MuttonEnabled') && g:MuttonEnabled == 1
 
     " Disable
     if exists('g:MuttonLeft') && g:MuttonLeft > 0
@@ -22,28 +16,34 @@ function! MuttonToggle()
 
   else
 
-    " Enable
     if exists('b:MuttonWidth')
       let l:width = b:MuttonWidth
-    else
+    elseif exists('g:MuttonWidth')
       let l:width = g:MuttonWidth
+    else
+      let l:width = &columns / 4
     endif
 
-    if a:position == 'left'
-      execute 'silent topleft vertical '.l:width.' split [[MuttonLeft]]'
-      let g:MuttonLeft = bufnr('')
-    elseif a:position == 'right'
-      execute 'silent vertical '.l:width.' split [[MuttonRight]]'
-      let g:MuttonRight = bufnr('')
-    endif
+    execute 'silent topleft vertical '.l:width.' split [[MuttonLeft]]'
+    let g:MuttonLeft = bufnr('')
+    call s:MuttonSetBufferOptions()
+    wincmd p
 
-    setlocal winfixwidth nonumber norelativenumber nomodifiable
-    set filetype=sidebar
-    setlocal statusline=\ 
-    set buftype=nofile
-    set nobuflisted
+    execute 'silent vertical '.l:width.' split [[MuttonRight]]'
+    let g:MuttonRight = bufnr('')
+    call s:MuttonSetBufferOptions()
+    wincmd p
+
     let g:MuttonEnabled = 1
     highlight NonText ctermfg=8
 
   endif
+endfunction
+
+function! s:MuttonSetBufferOptions()
+  setlocal winfixwidth nonumber norelativenumber nomodifiable
+  set filetype=sidebar
+  setlocal statusline=\ 
+  set buftype=nofile
+  set nobuflisted
 endfunction
