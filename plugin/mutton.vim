@@ -1,14 +1,69 @@
 
-command! MuttonToggle call MuttonToggle()
+" TODO: don't hard code hi NonText colors
 
+" Commands {{{1
+command! MuttonToggle call MuttonToggle()
+command! MuttonTagbarToggle call MuttonTagbarToggle()
+
+" Function MuttonTagbarToggle() {{{1
+function! MuttonTagbarToggle()
+  " get tagbar side
+  if exists('g:tagbar_left') && g:tagbar_left == 1
+    let l:side = 'left'
+  else
+    let l:side = 'right'
+  endif
+  let l:MuttonWinNr = MuttonWinNr(l:side)
+
+  if exists('t:tagbar_buf_name') && bufwinnr(t:tagbar_buf_name) != -1
+    " if tagbar is visible, close it
+    if exists('g:MuttonEnabled') && g:MuttonEnabled == 1
+      " if mutton is enabled, switch to 
+      execute bufwinnr(t:tagbar_buf_name).' wincmd w'
+      if l:side == 'left'
+        execute 'buffer '.g:MuttonLeft
+      elseif l:side == 'right'
+        execute 'buffer '.g:MuttonRight
+      endif
+      " move away from empty mutton window
+      execute 'wincmd p'
+    else
+      let g:tagbar_width = MuttonWidth()
+      execute 'TagbarToggle'
+    endif
+
+  else
+    " if tagbar isn't visible, show it
+    if l:MuttonWinNr != -1
+      " close corresponding mutton window if visible
+      execute l:MuttonWinNr.' wincmd c'
+    endif
+    let g:tagbar_width = MuttonWidth()
+    execute 'TagbarToggle'
+  endif
+endfunction
+
+" Function MuttonWidth() {{{1
+function! MuttonWidth()
+  if exists('b:MuttonWidth')
+    let l:width = b:MuttonWidth
+  elseif exists('g:MuttonWidth')
+    let l:width = g:MuttonWidth
+  else
+    let l:width = &columns / 4
+  endif
+  return l:width
+endfunction
+
+" Function MuttonToggle() {{{1
 function! MuttonToggle()
   if exists('g:MuttonEnabled') && g:MuttonEnabled == 1
 
     " Disable
-    if exists('g:MuttonLeft') && g:MuttonLeft > 0
+    if MuttonWinNr('left') != -1
       execute bufwinnr(g:MuttonLeft).' wincmd c'
     endif
-    if exists('g:MuttonRight') && g:MuttonRight > 0
+    if MuttonWinNr('right') != -1
       execute bufwinnr(g:MuttonRight).' wincmd c'
     endif
     let g:MuttonEnabled = 0
@@ -16,12 +71,14 @@ function! MuttonToggle()
 
   else
 
-    if exists('b:MuttonWidth')
-      let l:width = b:MuttonWidth
-    elseif exists('g:MuttonWidth')
-      let l:width = g:MuttonWidth
+    let l:width = MuttonWidth()
+
+    " close tagbar first
+    if exists('t:tagbar_buf_name') && bufwinnr(t:tagbar_buf_name) != -1
+      execute 'TagbarClose'
+      let l:do_tagbar = 1
     else
-      let l:width = &columns / 4
+      let l:do_tagbar = 0
     endif
 
     execute 'silent topleft vertical '.l:width.' split [[MuttonLeft]]'
@@ -37,13 +94,35 @@ function! MuttonToggle()
     let g:MuttonEnabled = 1
     highlight NonText ctermfg=8
 
+    if l:do_tagbar
+      execute 'MuttonTagbarToggle'
+    endif
+
   endif
 endfunction
 
+" Function s:MuttonSetBufferOptions() {{{1
 function! s:MuttonSetBufferOptions()
   setlocal winfixwidth nonumber norelativenumber nomodifiable
   set filetype=sidebar
   setlocal statusline=\ 
   set buftype=nofile
   set nobuflisted
+endfunction
+
+" Function MuttonWinNr(side) {{{1
+function! MuttonWinNr(side)
+  if a:side == 'left'
+    if exists('g:MuttonLeft') && g:MuttonLeft > 0
+      return bufwinnr(g:MuttonLeft)
+    else
+      return -1
+    endif
+  elseif a:side == 'right'
+    if exists('g:MuttonRight') && g:MuttonRight > 0
+      return bufwinnr(g:MuttonRight)
+    else
+      return -1
+    endif
+  endif
 endfunction
