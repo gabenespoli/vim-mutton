@@ -13,7 +13,7 @@ function! MuttonTagbarToggle()
   else
     let l:side = 'right'
   endif
-  let l:MuttonWinNr = MuttonWinNr(l:side)
+  let l:MuttonWinNr = s:MuttonWinNr(l:side)
 
   if exists('t:tagbar_buf_name') && bufwinnr(t:tagbar_buf_name) != -1
     " if tagbar is visible, close it
@@ -60,10 +60,10 @@ function! MuttonToggle()
   if exists('g:MuttonEnabled') && g:MuttonEnabled == 1
 
     " Disable
-    if MuttonWinNr('left') != -1
+    if s:MuttonWinNr('left') != -1
       execute bufwinnr(g:MuttonLeft).' wincmd c'
     endif
-    if MuttonWinNr('right') != -1
+    if s:MuttonWinNr('right') != -1
       execute bufwinnr(g:MuttonRight).' wincmd c'
     endif
     let g:MuttonEnabled = 0
