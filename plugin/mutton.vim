@@ -107,10 +107,26 @@ function! s:MuttonSetBufferOptions()
   set filetype=mutton
   set buftype=nofile
   set nobuflisted
+  setlocal statusline=\ 
+  autocmd BufEnter <buffer> call MuttonLastWindow()
 endfunction
 
-" Function MuttonWinNr(side) {{{1
-function! MuttonWinNr(side)
+" Function MuttonLastWindow() {{{1
+function! MuttonLastWindow()
+  if &filetype=="mutton"
+    if winbufnr(2) == -1 " last window open
+      quit
+    elseif winbufnr(3) == -1 " two windows open
+      let l:nrs = [g:MuttonLeft, g:MuttonRight]
+      if index(l:nrs, winbufnr(1)) != -1 && index(l:nrs, winbufnr(2)) != -1
+        quitall
+      endif
+    endif
+  endif
+endfunction
+
+" Function s:MuttonWinNr(side) {{{1
+function! s:MuttonWinNr(side)
   if a:side == 'left'
     if exists('g:MuttonLeft') && g:MuttonLeft > 0
       return bufwinnr(g:MuttonLeft)
