@@ -104,8 +104,7 @@ endfunction
 " Function s:MuttonSetBufferOptions() {{{1
 function! s:MuttonSetBufferOptions()
   setlocal winfixwidth nonumber norelativenumber nomodifiable
-  set filetype=sidebar
-  setlocal statusline=\ 
+  set filetype=mutton
   set buftype=nofile
   set nobuflisted
 endfunction
