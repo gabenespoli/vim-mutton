@@ -10,7 +10,8 @@ vim-plug: `Plug gabenespoli/vim-mutton`
 
 ## Commands
 
-`MuttonToggle`
+`MuttonToggle`: Toggle Mutton.
+
 `MuttonTagbarToggle`: Toggle Tagbar, respecting the state of Mutton.
 
 ## Recommended Keybindings
