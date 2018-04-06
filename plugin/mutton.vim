@@ -67,7 +67,6 @@ function! MuttonToggle()
       execute bufwinnr(g:MuttonRight).' wincmd c'
     endif
     let g:MuttonEnabled = 0
-    highlight NonText ctermfg=0
 
   else
 
@@ -92,7 +91,6 @@ function! MuttonToggle()
     wincmd p
 
     let g:MuttonEnabled = 1
-    highlight NonText ctermfg=8
 
     if l:do_tagbar
       execute 'MuttonTagbarToggle'
