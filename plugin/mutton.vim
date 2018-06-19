@@ -101,7 +101,7 @@ endfunction
 
 " Function s:MuttonSetBufferOptions() {{{1
 function! s:MuttonSetBufferOptions()
-  setlocal winfixwidth nonumber norelativenumber nomodifiable
+  setlocal winfixwidth nonumber norelativenumber nomodifiable nocursorline
   set filetype=mutton
   set buftype=nofile
   set nobuflisted
