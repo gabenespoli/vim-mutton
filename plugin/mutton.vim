@@ -1,5 +1,5 @@
-
-" TODO: don't hard code hi NonText colors
+" Name:     Vim Mutton
+" Author:   Gabriel A. Nespoli <gabenespoli@gmail.com>
 
 " Commands {{{1
 command! MuttonToggle call MuttonToggle()
