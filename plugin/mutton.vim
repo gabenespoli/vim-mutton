@@ -80,6 +80,7 @@ function! MuttonToggle()
       let l:do_tagbar = 0
     endif
 
+    " create the side bars
     execute 'silent topleft vertical '.l:width.' split [[MuttonLeft]]'
     let g:MuttonLeft = bufnr('')
     call s:MuttonSetBufferOptions()
