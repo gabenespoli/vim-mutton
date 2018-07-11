@@ -2,19 +2,53 @@
 " Author:   Gabriel A. Nespoli <gabenespoli@gmail.com>
 
 " Commands {{{1
-command! MuttonToggle call MuttonToggle()
+command! -nargs=? MuttonToggle call MuttonToggle(<args>)
 command! MuttonTagbarToggle call MuttonTagbarToggle()
 command! MuttonSplit call MuttonSplit()
 command! MuttonEnabled call MuttonEnabled()
 
 " TODO: autocmd WinLeave if mutton windows open resize them?
 
+" Keymaps {{{1
+if !exists('g:MuttonDisableKeymaps') || g:MuttonDisableKeymaps == 1
+  nnoremap <C-w><C-e><CR>  :call MuttonToggle()<CR>
+  nnoremap <C-w><C-e>j     :call MuttonToggle()<CR>
+  nnoremap <C-w><C-e><C-j> :call MuttonToggle()<CR>
+  nnoremap <C-w><C-e>m     :call MuttonToggle()<CR>
+  nnoremap <C-w><C-e><C-m> :call MuttonToggle()<CR>
+  nnoremap <C-w><C-e>h     :call MuttonToggle('left')<CR>
+  nnoremap <C-w><C-e><C-h> :call MuttonToggle('left')<CR>
+  nnoremap <C-w><C-e>l     :call MuttonToggle('right')<CR>
+  nnoremap <C-w><C-e><C-l> :call MuttonToggle('right')<CR>
+endif
+
 " Function MuttonToggle() {{{1
-function! MuttonToggle()
-  if MuttonEnabled()
-    call MuttonCloseAll()
+function! MuttonToggle(...)
+  if a:0 == 0
+    if MuttonEnabled()
+      call MuttonCloseAll()
+    else
+      call MuttonOn()
+    endif
   else
-    call MuttonOn()
+
+    let l:bufnr = bufnr('[[Mutton]]')
+
+    if a:1 ==? 'left' 
+      if winbufnr(1) != l:bufnr
+        call MuttonOpen('left')
+      else
+        1 wincmd c
+      endif
+
+    elseif a:1 ==? 'right' 
+      if winbufnr(winnr('$')) != l:bufnr
+        call MuttonOpen('right')
+      else
+        execute winnr('$').' wincmd c'
+      endif
+    endif
+
   endif
 endfunction
 
@@ -24,8 +58,15 @@ function! MuttonOn()
     call MuttonOpen('left')
     call MuttonOpen('right')
   elseif winnr('$') == 2
-    " TODO: if winnr() is tagbar, we don't want it to be the center
-    if winnr() == 1
+    " if we're in tagbar, make the other window the center
+    " else make current window the center
+    if exists('t:tagbar_buf_name') && bufname('%') ==# t:tagbar_buf_name
+      if g:tagbar_left == 1
+        call MuttonOpen('right')
+      else
+        call MuttonOpen('left')
+      endif
+    elseif winnr() == 1
       call MuttonOpen('left')
     else
       call MuttonOpen('right')
@@ -41,6 +82,9 @@ function! MuttonResize()
     for i in [1, 3]
       execute i.' wincmd w'
       execute l:resize
+      if winbufnr(i) == bufnr('[[Mutton]]')
+        set winfixwidth
+      endif
     endfor
     2 wincmd w
   elseif winnr('$') == 2
@@ -52,6 +96,7 @@ function! MuttonResize()
 endfunction
 
 " Function MuttonOpen(side) {{{1
+" accepts a count for the width of the window
 function! MuttonOpen(side)
   if a:side ==# 'left'
     let l:splitloc = 'topleft'
@@ -67,11 +112,16 @@ function! MuttonOpen(side)
     set filetype=mutton
     set buftype=nofile
   endif
-  " execute 'vertical resize '.MuttonWidth()
-  " setlocal winfixwidth
+  if v:count == 0
+    let l:width = MuttonWidth()
+  else
+    let l:width = v:count
+  endif
+  execute 'vertical resize '.l:width
+  set winfixwidth
+  set nobuflisted
   setlocal nomodifiable 
   setlocal nonumber norelativenumber nocursorline nocursorcolumn
-  set nobuflisted
   setlocal statusline=\ 
   augroup mutton
     au!
@@ -130,15 +180,6 @@ endfunction
 
 " Function MuttonTagbarToggle() {{{1
 function! MuttonTagbarToggle()
-  " get tagbar side
-  " if winnr() == 2
-    " let l:side = 'right'
-  if exists('g:tagbar_left') && g:tagbar_left == 1
-    let l:sidewinnr = 1
-  else
-    let l:sidewinnr = 3
-  endif
-  " let l:MuttonWinNr = s:MuttonWinNr(l:side)
 
   if exists('t:tagbar_buf_name') && bufwinnr(t:tagbar_buf_name) != -1
     " if tagbar is visible, close it
@@ -164,6 +205,7 @@ function! MuttonTagbarToggle()
     endif
     let g:tagbar_width = MuttonWidth()
     execute 'TagbarToggle'
+    call MuttonResize()
   endif
 endfunction
 
