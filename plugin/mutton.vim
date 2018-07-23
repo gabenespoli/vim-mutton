@@ -220,5 +220,11 @@ function! MuttonWidth()
   else
     let l:width = &columns / 4
   endif
+  if exists('g:mutton_min_center_width')
+        \ && g:mutton_min_center_width > 0
+    if (&columns - (l:width * 2)) < g:mutton_min_center_width 
+      let l:width = (&columns - g:mutton_min_center_width) / 2
+    endif
+  endif
   return l:width
 endfunction
