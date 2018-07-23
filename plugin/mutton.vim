@@ -13,7 +13,7 @@ let g:mutton_enabled = {'left': 0, 'right': 0}
 command! -nargs=? MuttonToggle call MuttonToggle(<args>)
 
 " Keymaps {{{1
-if !exists('g:MuttonDisableKeymaps') || g:MuttonDisableKeymaps == 1
+if !exists('g:mutton_disable_keymaps') || g:mutton_disable_keymaps == 1
   nnoremap <C-w>e          :call MuttonToggle()<CR>
   nnoremap <C-w><C-e>      :call MuttonToggle()<CR>
   nnoremap <C-w><C-m>h     :call MuttonToggle('left')<CR>
