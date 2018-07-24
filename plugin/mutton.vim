@@ -6,13 +6,13 @@ if exists('g:loaded_mutton')
 endif
 let g:loaded_mutton = 1
 
+" Initialize some variables {{{1
 let g:mutton_visible = {'left': '', 'right': ''}
 let g:mutton_enabled = {'left': 0, 'right': 0}
 
-" Commands {{{1
+" Commands & Keymaps {{{1
 command! -nargs=? MuttonToggle call MuttonToggle(<args>)
 
-" Keymaps {{{1
 if !exists('g:mutton_disable_keymaps') || g:mutton_disable_keymaps == 1
   nnoremap <silent> <C-w><C-e>  :MuttonToggle<CR>
   nnoremap <silent> <C-w>eh     :MuttonToggle('left')<CR>
