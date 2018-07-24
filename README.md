@@ -47,9 +47,9 @@ is unused by vim. Think "window empty". The following maps are added by default.
 Add `let g:mutton_disable_keymaps = 1` to your vimrc to disable them.
 
 ```vim
-  nnoremap <C-w><C-e>  :call MuttonToggle()<CR>
-  nnoremap <C-w>eh     :call MuttonToggle('left')<CR>
-  nnoremap <C-w>el     :call MuttonToggle('right')<CR>
+nnoremap <C-w><C-e>  :MuttonToggle()<CR>
+nnoremap <C-w>eh     :MuttonToggle('left')<CR>
+nnoremap <C-w>el     :MuttonToggle('right')<CR>
 ```
 
 Keymaps for plugin toggles are not enabled by default. For example, I use the following in my vimrc:

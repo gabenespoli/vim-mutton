@@ -14,9 +14,9 @@ command! -nargs=? MuttonToggle call MuttonToggle(<args>)
 
 " Keymaps {{{1
 if !exists('g:mutton_disable_keymaps') || g:mutton_disable_keymaps == 1
-  nnoremap <C-w><C-e>  :call MuttonToggle()<CR>
-  nnoremap <C-w>eh     :call MuttonToggle('left')<CR>
-  nnoremap <C-w>el     :call MuttonToggle('right')<CR>
+  nnoremap <C-w><C-e>  :MuttonToggle()<CR>
+  nnoremap <C-w>eh     :MuttonToggle('left')<CR>
+  nnoremap <C-w>el     :MuttonToggle('right')<CR>
 endif
 
 " Function MuttonToggle() {{{1
