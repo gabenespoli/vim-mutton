@@ -10,6 +10,11 @@ let g:loaded_mutton = 1
 let g:mutton_visible = {'left': '', 'right': ''}
 let g:mutton_enabled = {'left': 0, 'right': 0}
 
+" this doesn't get initalized until buffergator is called for the first time
+if !exists('g:buffergator_viewport_split_policy')
+  let g:buffergator_viewport_split_policy = 'L'
+endif
+
 " Commands & Keymaps {{{1
 command! -nargs=? MuttonToggle call MuttonToggle(<args>)
 
