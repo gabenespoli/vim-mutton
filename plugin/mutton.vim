@@ -25,12 +25,12 @@ if !exists('g:mutton_disable_keymaps') || g:mutton_disable_keymaps == 1
 endif
 
 " Function MuttonToggle() {{{1
-" call with no input to toggle both sides on/off
+" call with no input or 'both' to toggle both sides on/off
 " call with 'left' or 'right' to toggle one side only
 " call with function to open that sidebar
 function! MuttonToggle(...)
   let l:mutton_visible = {'left': '', 'right': ''}
-  if a:0 == 0
+  if a:0 == 0 || a:1 ==# 'both'
     if g:mutton_enabled['left'] || g:mutton_enabled['right']
       let g:mutton_enabled['left'] = 0
       let g:mutton_enabled['right'] = 0
