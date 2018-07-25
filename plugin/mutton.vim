@@ -134,7 +134,11 @@ function! MuttonOpenPlugin(name)
     TagbarOpen
   elseif a:name ==# 'nerdtree'
     let g:NERDTreeWinSize = MuttonWidth()
-    NERDTreeFind
+    if !empty(expand('%'))
+      NERDTreeFind
+    else
+      NERDTreeToggle
+    endif
   elseif a:name ==# 'buffergator'
     let g:buffergator_vsplit_size = MuttonWidth()
     " TODO: use global mutton var to specify desired buffergator side?
