@@ -9,14 +9,14 @@ empty sidebars. Supports [Tagbar](https://github.com/majutsushi/tagbar),
 ## Motivation
 
 I usually use n/vim in a full-screen terminal, which causes two problems
-[especiall] on a large monitor. First, when editing code that is 80 characters
-wide all of the text is on the far left and I'd much prefer it to be centered on
-the screen. Second, when editing prose with soft line wrapping, each line (aka,
-paragraph) is way to long across. I wanted to be able to center the buffer on
-the screen. This plugin provides commands for toggling empty buffers on the left
-and right parts of the screen, leaving your content in the middle part. This
-plugin also provides wrappers for some sidebar plugins, so that they play nice
-with the empty sidebars.
+[especially] on a large monitor. First, when editing code that is 80 characters
+wide all of the text is on the far left and I'd much prefer it to be centered
+on the screen. Second, when editing prose with soft line wrapping, each line
+(aka, paragraph) is way to long across. I wanted to be able to center the
+buffer on the screen. This plugin provides commands for toggling empty buffers
+on the left and right parts of the screen, leaving your content in the middle
+part. This plugin also provides wrappers for some sidebar plugins, so that they
+play nice with the empty sidebars.
 
 ## Installation
 
@@ -33,12 +33,14 @@ left or the right side.
 and replace the mutton window if one exists. Use `g:tagbar_left` to control
 which side it opens on.
 
-`:MuttonToggle('nerdtree')` = Open [NERDTree](https://github.com/scrooloose/nerdtree) and replace the mutton window if
-one exists. Use `g:NERDTreeWinPos` to control which side it opens on.
+`:MuttonToggle('nerdtree')` = Open
+[NERDTree](https://github.com/scrooloose/nerdtree) and replace the mutton window
+if one exists. Use `g:NERDTreeWinPos` to control which side it opens on.
 
-`:MuttonToggle('buffergator')` = Open [Buffergator](https://github.com/jeetsukumaran/vim-buffergator) and replace the mutton
-window if one exists. Use `g:buffergator_viewport_split_policy` to control which
-side it opens on
+`:MuttonToggle('buffergator')` = Open
+[Buffergator](https://github.com/jeetsukumaran/vim-buffergator) and replace the
+mutton window if one exists. Use `g:buffergator_viewport_split_policy` to
+control which side it opens on.
 
 ## Keymaps
 
@@ -52,7 +54,8 @@ nnoremap <silent> <C-w>eh     :MuttonToggle('left')<CR>
 nnoremap <silent> <C-w>el     :MuttonToggle('right')<CR>
 ```
 
-Keymaps for plugin toggles are not enabled by default. For example, I use the following in my vimrc:
+Keymaps for plugin toggles are not enabled by default. For example, I use the
+following in my vimrc:.
 
 ```vim
 nnoremap <silent> <leader>t :MuttonToggle('tagbar')<CR>
