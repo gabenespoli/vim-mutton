@@ -210,7 +210,11 @@ function! MuttonLastWindow()
     elseif winnr('$') == 2
       let l:bufnr = bufnr('[[Mutton]]')
       if winbufnr(1) == l:bufnr && winbufnr(2) == l:bufnr
-        quitall
+        if tabpagenr('$') == 1
+          quitall
+        else
+          tabclose
+        endif
       endif
     endif
   endif
