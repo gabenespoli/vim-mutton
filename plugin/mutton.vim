@@ -122,11 +122,21 @@ endfunction
 function! MuttonClose(side)
   call MuttonInitialize('visible')
   if t:mutton_visible[a:side] ==# 'blank'
+
+    " switch to far left or far right window
     if a:side ==# 'left'
-      execute '1 wincmd c'
+      execute '1 wincmd w'
     else
-      execute '$ wincmd c'
+      execute '$ wincmd w'
     endif
+
+    " if it's a mutton window, close it, otherwise switch back
+    if &filetype ==# 'mutton'
+      execute 'wincmd c'
+    else
+      execute 'wincmd p'
+    endif
+
   elseif t:mutton_visible[a:side] ==# 'tagbar'
     TagbarClose
   elseif t:mutton_visible[a:side] ==# 'nerdtree'
