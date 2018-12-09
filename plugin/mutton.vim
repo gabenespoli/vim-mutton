@@ -151,10 +151,6 @@ function! MuttonOpenPlugin(name)
     endif
   elseif a:name ==# 'buffergator'
     let g:buffergator_vsplit_size = MuttonWidth()
-    " TODO: use global mutton var to specify desired buffergator side?
-    " or maybe do this in cider vinegar instead?
-    " then we would have to save current val, change it, open buffergator,
-    "   then change it back
     BuffergatorOpen
   endif
 endfunction
