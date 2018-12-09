@@ -69,7 +69,7 @@ function! MuttonToggle(...)
     elseif g:buffergator_viewport_split_policy ==# 'R'
       let l:mutton_visible['right'] = 'buffergator'
     else
-      echo 'For mutton, buffergator_viewport_split_policy must be L or R'
+      echo 'The g:buffergator_viewport_split_policy variable must be L or R for mutton.'
     endif
 
   endif
