@@ -96,7 +96,7 @@ function! MuttonRefresh(mutton_visible)
     if !empty(l:desired) 
       if l:desired !=# l:current
         call MuttonClose(side)
-        call MuttonOpenPlugin(l:desired)
+        call MuttonOpenPlugin(l:desired, side)
         let t:mutton_visible[side] = l:desired
       elseif l:desired ==# l:current
         call MuttonClose(side)
@@ -138,7 +138,7 @@ endfunction
 
 " Function MuttonOpenPlugin(name) {{{1
 " only handles plugins, not blank mutton sidebars
-function! MuttonOpenPlugin(name)
+function! MuttonOpenPlugin(name, side)
   if a:name ==# 'tagbar'
     let g:tagbar_width = MuttonWidth()
     TagbarOpen
