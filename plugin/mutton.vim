@@ -7,9 +7,6 @@ endif
 let g:loaded_mutton = 1
 
 " Initialize some variables {{{1
-let g:mutton_visible = {'left': '', 'right': ''}
-let g:mutton_enabled = {'left': 0, 'right': 0}
-
 " this doesn't get initalized until buffergator is called for the first time
 if !exists('g:buffergator_viewport_split_policy')
   let g:buffergator_viewport_split_policy = 'L'
@@ -24,26 +21,36 @@ if !exists('g:mutton_disable_keymaps') || g:mutton_disable_keymaps == 1
   nnoremap <silent> <C-w>el     :MuttonToggle('right')<CR>
 endif
 
+" Function MuttonInitialize(var) {{{1
+function! MuttonInitialize(var)
+  if a:var ==# 'enabled' && !exists('t:mutton_enabled')
+    let t:mutton_enabled = {'left': 0, 'right': 0}
+  elseif a:var ==# 'visible' && !exists('t:mutton_visible')
+    let t:mutton_visible = {'left': '', 'right': ''}
+  endif
+endfunction
+
 " Function MuttonToggle() {{{1
 " call with no input or 'both' to toggle both sides on/off
 " call with 'left' or 'right' to toggle one side only
 " call with function to open that sidebar
 function! MuttonToggle(...)
+  call MuttonInitialize('enabled')
   let l:mutton_visible = {'left': '', 'right': ''}
   if a:0 == 0 || a:1 ==# 'both'
-    if g:mutton_enabled['left'] || g:mutton_enabled['right']
-      let g:mutton_enabled['left'] = 0
-      let g:mutton_enabled['right'] = 0
+    if t:mutton_enabled['left'] || t:mutton_enabled['right']
+      let t:mutton_enabled['left'] = 0
+      let t:mutton_enabled['right'] = 0
     else
-      let g:mutton_enabled['left'] = 1
-      let g:mutton_enabled['right'] = 1
+      let t:mutton_enabled['left'] = 1
+      let t:mutton_enabled['right'] = 1
     endif
 
   elseif a:1 ==# 'left' || a:1 ==# 'right'
-    if g:mutton_enabled[a:1]
-      let g:mutton_enabled[a:1] = 0
+    if t:mutton_enabled[a:1]
+      let t:mutton_enabled[a:1] = 0
     else
-      let g:mutton_enabled[a:1] = 1
+      let t:mutton_enabled[a:1] = 1
     endif
 
   elseif a:1 ==# 'tagbar'
@@ -72,37 +79,39 @@ endfunction
 
 " Function MuttonRefresh(mutton_visible) {{{1
 " - a:mutton_visible is what you want it to be; empty means no change from
-"     what g:mutton_visible is
-" - g:mutton_visible is the current state of affairs (but we should probably
+"     what t:mutton_visible is
+" - t:mutton_visible is the current state of affairs (but we should probably
 "     check them to make sure the user hasn't done anything that mutton
 "     doesn't know about)
-" - g:mutton_enabled is whether blank should be opened if there is no sidebar
+" - t:mutton_enabled is whether blank should be opened if there is no sidebar
 function! MuttonRefresh(mutton_visible)
+  call MuttonInitialize('enabled')
+  call MuttonInitialize('visible')
   for side in ['left', 'right']
     let l:desired = a:mutton_visible[side]
-    let l:current = g:mutton_visible[side]
-    let l:blank = g:mutton_enabled[side]
+    let l:current = t:mutton_visible[side]
+    let l:blank = t:mutton_enabled[side]
 
     " if you want something different, change it
     if !empty(l:desired) 
       if l:desired !=# l:current
         call MuttonClose(side)
         call MuttonOpenPlugin(l:desired)
-        let g:mutton_visible[side] = l:desired
+        let t:mutton_visible[side] = l:desired
       elseif l:desired ==# l:current
         call MuttonClose(side)
-        let g:mutton_visible[side] = ''
+        let t:mutton_visible[side] = ''
       endif
     endif
 
     " cleanup blanks
-    let l:current = g:mutton_visible[side]
+    let l:current = t:mutton_visible[side]
     if l:blank == 1 && empty(l:current)
       call MuttonOpenBlank(side)
-      let g:mutton_visible[side] = 'blank'
+      let t:mutton_visible[side] = 'blank'
     elseif l:blank == 0 && l:current ==# 'blank'
       call MuttonClose(side)
-      let g:mutton_visible[side] = ''
+      let t:mutton_visible[side] = ''
     endif
 
   endfor
@@ -111,17 +120,18 @@ endfunction
 " Function MuttonClose(side) {{{1
 " has to handle both plugins and mutton blank sidebars
 function! MuttonClose(side)
-  if g:mutton_visible[a:side] ==# 'blank'
+  call MuttonInitialize('visible')
+  if t:mutton_visible[a:side] ==# 'blank'
     if a:side ==# 'left'
       execute '1 wincmd c'
     else
       execute '$ wincmd c'
     endif
-  elseif g:mutton_visible[a:side] ==# 'tagbar'
+  elseif t:mutton_visible[a:side] ==# 'tagbar'
     TagbarClose
-  elseif g:mutton_visible[a:side] ==# 'nerdtree'
+  elseif t:mutton_visible[a:side] ==# 'nerdtree'
     NERDTreeClose
-  elseif g:mutton_visible[a:side] ==# 'buffergator'
+  elseif t:mutton_visible[a:side] ==# 'buffergator'
     BuffergatorClose
   endif
 endfunction
@@ -154,7 +164,8 @@ endfunction
 " side input arg is required
 " doesn't open if there is a sidebar there already
 function! MuttonOpenBlank(side)
-  " if g:mutton_visible[a:side] ==# 'blank'
+  " call MuttonInitialize('visible')
+  " if t:mutton_visible[a:side] ==# 'blank'
   "   return
   " endif
 
