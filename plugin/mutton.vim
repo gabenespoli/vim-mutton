@@ -243,5 +243,9 @@ function! MuttonWidth()
       let l:width = (&columns - g:mutton_min_center_width) / 2
     endif
   endif
+  if exists('g:mutton_min_side_width')
+        \ && l:width < g:mutton_min_side_width
+    let l:width = g:mutton_min_side_width
+  endif
   return l:width
 endfunction
