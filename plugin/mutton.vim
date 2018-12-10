@@ -6,12 +6,6 @@ if exists('g:loaded_mutton')
 endif
 let g:loaded_mutton = 1
 
-" Initialize some variables {{{1
-" this doesn't get initalized until buffergator is called for the first time
-if !exists('g:buffergator_viewport_split_policy')
-  let g:buffergator_viewport_split_policy = 'L'
-endif
-
 " Commands & Keymaps {{{1
 command! -nargs=? MuttonToggle call MuttonToggle(<args>)
 
@@ -160,6 +154,9 @@ function! MuttonOpenPlugin(name, side)
       NERDTreeToggle
     endif
   elseif a:name ==# 'buffergator'
+    if !exists('g:buffergator_viewport_split_policy')
+      let g:buffergator_viewport_split_policy = 'L'
+    endif
     let g:buffergator_vsplit_size = MuttonWidth()
     BuffergatorOpen
   endif
